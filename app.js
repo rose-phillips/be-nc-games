@@ -1,8 +1,5 @@
-const express = require("express");
 const { getCategories } = require("./controllers/games-controller");
 const app = express();
-
-app.use(express.json());
 
 app.get("/api/categories", getCategories);
 
@@ -12,7 +9,6 @@ app.get("/*", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err, "unhandled error");
   res.status(500).send({ message: "internal server error" });
 });
 
