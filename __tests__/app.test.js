@@ -23,15 +23,16 @@ describe.only("\n/api/categories tests:\n", () => {
           );
         });
     });
-  });
-  describe("\nerror handling tests:\n", () => {
-    test("sends 404 - bad request when passed incorrect path", () => {
-      return request(app)
-        .get("/api/wrongpath")
-        .expect(404)
-        .then((response) => {
-          expect(response.body.msg).toBe("invalid path");
-        });
+
+    describe("\nerror handling tests:\n", () => {
+      test("sends 404 - bad request when passed incorrect path", () => {
+        return request(app)
+          .get("/api/wrongpath")
+          .expect(404)
+          .then((response) => {
+            expect(response.body.msg).toBe("invalid path");
+          });
+      });
     });
   });
 });
