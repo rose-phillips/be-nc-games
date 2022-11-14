@@ -7,7 +7,7 @@ const testData = require("../db/data/test-data/index.js");
 beforeEach(() => seed(testData));
 afterAll(() => connection.end());
 
-describe.only("\n/api/categories tests:\n", () => {
+describe("\n/api/categories tests:\n", () => {
   describe("GET:200 and send array of category objects", () => {
     test("200 status", () => {
       return request(app).get("/api/categories").expect(200);
