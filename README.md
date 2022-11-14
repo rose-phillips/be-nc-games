@@ -1,1 +1,1 @@
-You will need to create two .env files to use this repo: `.env.test` and `.env.development`. Into each, add `PGDATABASE=<database_name_here>`, with the correct database name for that environment. Double check that these .env files are .gitignored.
+You will need to create two .env files to use this repo: `.env.test` and `.env.development`. Into each, add `PGDATABASE=nc_games` for dev and `PGDATABASE=nc_games_test`, with the correct database name for that environment. Double check that these .env files are .gitignored.
