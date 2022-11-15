@@ -12,27 +12,44 @@ describe("\n/api/categories tests:\n", () => {
     test("200 status", () => {
       return request(app).get("/api/categories").expect(200);
     });
-    test("get array of category objects with slug and description properties", () => {
+    test("get array of category objects", () => {
       return request(app)
         .get("/api/categories")
         .expect(200)
         .then((response) => {
           expect(response.body.categories).toEqual(expect.any(Array));
-          expect(Object.keys(response.body.categories[0])).toEqual(
-            expect.arrayContaining(["slug", "description"])
-          );
         });
     });
-
-    describe("\nerror handling tests:\n", () => {
-      test("sends 404 - bad request when passed incorrect path", () => {
-        return request(app)
-          .get("/api/wrongpath")
-          .expect(404)
-          .then((response) => {
-            expect(response.body.msg).toBe("invalid path");
+    test("all categories objects are sent", () => {
+      return request(app)
+        .get("/api/categories")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.categories.length).toBe(4);
+        });
+    });
+    test("properties of slug and desciption on objects", () => {
+      return request(app)
+        .get("/api/categories")
+        .expect(200)
+        .then((response) => {
+          response.body.categories.forEach((category) => {
+            expect(Object.keys(category)).toEqual(
+              expect.arrayContaining(["slug", "description"])
+            );
           });
-      });
+        });
+    });
+  });
+
+  describe("\nerror handling tests:\n", () => {
+    test("sends 404 - bad request when passed incorrect path", () => {
+      return request(app)
+        .get("/api/wrongpath")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("invalid path");
+        });
     });
   });
 });
