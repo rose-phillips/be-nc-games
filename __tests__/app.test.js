@@ -125,11 +125,11 @@ describe("\nGET /api/reviews/:review_id\n", () => {
         });
       });
   });
-  test("get 400 'invalid path' when review_id not found", () => {
+  test("get 404 'invalid path' when not found", () => {
     const review_id = 1000;
     return request(app)
       .get(`/api/reviews/${review_id}`)
-      .expect(400)
-      .then((response) => expect(response.body.msg).toBe("invalid path"));
+      .expect(404)
+      .then((response) => expect(response.body.msg).toBe("not found"));
   });
 });
