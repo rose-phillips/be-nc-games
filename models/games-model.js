@@ -30,3 +30,18 @@ exports.selectReviewsCommentCount = () => {
       return result.rows;
     });
 };
+
+exports.selectReviewsWithReviewId = (review_id) => {
+  return db
+    .query(
+      `SELECT * FROM reviews
+    WHERE review_id = ${review_id}`
+    )
+    .then((reviews) => {
+      if (!reviews.rows[0]) {
+        return Promise.reject({ status: 400, msg: "invalid path" });
+      }
+
+      return reviews.rows[0];
+    });
+};
