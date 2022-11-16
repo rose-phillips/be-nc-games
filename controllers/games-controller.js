@@ -16,3 +16,14 @@ exports.getReviewsCommentCount = (req, res, next) => {
     res.status(200).send({ reviews });
   });
 };
+
+exports.getReviewsWithReviewId = (req, res, next) => {
+  selectReviewsWithReviewId(req.params.review_id)
+    .then((review) => {
+      res.status(200).send({ review });
+    })
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    });
+};
