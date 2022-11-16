@@ -1,5 +1,9 @@
 const { application } = require("express");
-const { selectCategories, selectReviews } = require("../models/games-model");
+const {
+  selectCategories,
+  selectReviewsCommentCount,
+  selectReviewsWithReviewId,
+} = require("../models/games-model");
 
 exports.getCategories = (req, res, next) => {
   selectCategories().then((categories) => {
@@ -7,8 +11,12 @@ exports.getCategories = (req, res, next) => {
   });
 };
 
-exports.getReviews = (req, res, next) => {
-  selectReviews().then((reviews) => {
+exports.getReviewsCommentCount = (req, res, next) => {
+  selectReviewsCommentCount().then((reviews) => {
     res.status(200).send({ reviews });
   });
+};
+
+exports.getReviewsWithReviewId = (req, res, next) => {
+  selectReviewsWithReviewId().then(console.log("hello from controller"));
 };

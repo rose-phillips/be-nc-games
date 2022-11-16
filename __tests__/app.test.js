@@ -18,7 +18,7 @@ describe("\nerror handling tests:\n", () => {
   });
 });
 
-describe("\n/api/categories tests:\n", () => {
+describe("\nGET /api/categories tests:\n", () => {
   describe("GET:200 and send array of category objects", () => {
     test("200 status and an array of category objects", () => {
       return request(app)
@@ -51,7 +51,7 @@ describe("\n/api/categories tests:\n", () => {
   });
 });
 
-describe("\n/api/reviews tests:\n", () => {
+describe("\nGET /api/reviews tests:\n", () => {
   describe("GET:200 and send array of reviews with comment count added", () => {
     test("get 200 status and an array of objects", () => {
       return request(app)
@@ -92,4 +92,8 @@ describe("\n/api/reviews tests:\n", () => {
         });
     });
   });
+});
+
+describe("\nGET /api/reviews/:review_id\n", () => {
+  describe("GET:200 and send review object with the input review_id");
 });
