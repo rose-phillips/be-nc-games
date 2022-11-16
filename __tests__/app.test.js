@@ -133,3 +133,48 @@ describe("\nGET /api/reviews/:review_id\n", () => {
       .then((response) => expect(response.body.msg).toBe("invalid path"));
   });
 });
+describe("\nGET /api/reviews/:review_id/comments\n", () => {
+  test("GET 200 status and matching comments", () => {
+    const review_id = 3;
+    return request(app)
+      .get(`/api/reviews/${review_id}/comments`)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments).toEqual([
+          {
+            comment_id: 2,
+            body: "My dog loved this game too!",
+            review_id: 3,
+            author: "mallionaire",
+            votes: 13,
+            created_at: "2021-01-18T10:09:05.410Z",
+          },
+          {
+            comment_id: 3,
+            body: "I didn't know dogs could play games",
+            review_id: 3,
+            author: "philippaclaire9",
+            votes: 10,
+            created_at: "2021-01-18T10:09:48.110Z",
+          },
+          {
+            comment_id: 6,
+            body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+            review_id: 3,
+            author: "philippaclaire9",
+            votes: 10,
+            created_at: "2021-03-27T19:49:48.110Z",
+          },
+        ]);
+      });
+  });
+  test("right number of comments returned", () => {
+    const review_id = 3;
+    return request(app)
+      .get(`/api/reviews/${review_id}/comments`)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments.length).toBe(3);
+      });
+  });
+});
