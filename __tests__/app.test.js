@@ -3,6 +3,7 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed");
 const connection = require("../db/connection.js");
 const testData = require("../db/data/test-data/index.js");
+const jestSorted = require("jest-sorted");
 
 beforeEach(() => seed(testData));
 afterAll(() => connection.end());
@@ -91,9 +92,15 @@ describe("\nGET /api/reviews tests:\n", () => {
           });
         });
     });
+    test("objects sorted by date", () => {
+      return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.reviews).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
   });
-});
-
-describe("\nGET /api/reviews/:review_id\n", () => {
-  describe("GET:200 and send review object with the input review_id");
 });

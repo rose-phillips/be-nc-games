@@ -30,14 +30,3 @@ exports.selectReviewsCommentCount = () => {
       return result.rows;
     });
 };
-
-exports.selectReviewsWithReviewId = (review_id) => {
-  return db
-    .query(
-      `SELECT * FROM reviews
-    WHERE review_id = '${review_id}'`
-    )
-    .then((reviews) => {
-      return reviews.rows[0];
-    });
-};

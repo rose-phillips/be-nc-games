@@ -16,7 +16,3 @@ exports.getReviewsCommentCount = (req, res, next) => {
     res.status(200).send({ reviews });
   });
 };
-
-exports.getReviewsWithReviewId = (req, res, next) => {
-  selectReviewsWithReviewId().then(console.log("hello from controller"));
-};
