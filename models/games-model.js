@@ -41,8 +41,24 @@ exports.selectReviewsWithReviewId = (review_id) => {
     .then((reviews) => {
       if (!reviews.rows[0]) {
         return Promise.reject({ status: 404, msg: "not found" });
+
       } else {
         return reviews.rows[0];
+
       }
+    });
+};
+
+exports.selectReviewComments = (review_id) => {
+  return db
+    .query(
+      `
+    SELECT * FROM comments
+    WHERE review_id = $1;
+    `,
+      [review_id]
+    )
+    .then((comments) => {
+      return comments.rows;
     });
 };

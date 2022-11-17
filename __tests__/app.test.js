@@ -125,11 +125,43 @@ describe("\nGET /api/reviews/:review_id\n", () => {
         });
       });
   });
-  test("get 404 'invalid path' when not found", () => {
+  
+  
+
+  test("get 404 'not found' when review_id not found", () => {
+
+
     const review_id = 1000;
     return request(app)
       .get(`/api/reviews/${review_id}`)
       .expect(404)
       .then((response) => expect(response.body.msg).toBe("not found"));
+      
+      
+
+  });
+});
+describe("\nGET /api/reviews/:review_id/comments\n", () => {
+  test("GET 200 status and matching comments", () => {
+    const review_id = 3;
+    return request(app)
+      .get(`/api/reviews/${review_id}/comments`)
+      .expect(200)
+      .then((response) => {
+        response.body.comments.forEach((comment) => {
+          expect(Object.keys(comment)).toEqual(
+            expect.arrayContaining([
+              "comment_id",
+              "body",
+              "review_id",
+              "author",
+              "votes",
+              "created_at",
+            ])
+          );
+          expect(response.body.comments.length).toBe(3);
+        });
+      });
+
   });
 });
