@@ -1,5 +1,4 @@
 const db = require("../db/connection.js");
-const { createRef } = require("../db/seeds/utils.js");
 
 exports.selectCategories = () => {
   return db
@@ -60,5 +59,26 @@ exports.selectReviewComments = (review_id) => {
     )
     .then((comments) => {
       return comments.rows;
+    });
+};
+
+exports.insertComment = (review_id, { username, body }) => {
+  return db
+    .query(
+      `
+      INSERT INTO comments 
+      (
+        review_id, author, body
+      )
+      VALUES
+      (
+        $1, $2, $3
+      )
+      RETURNING *;
+      `,
+      [review_id, username, body]
+    )
+    .then((newComment) => {
+      return newComment.rows[0];
     });
 };
