@@ -72,7 +72,7 @@ exports.insertComment = (review_id, { username, body }) => {
       (
         $1, $2, $3
       )
-      RETURNING body;
+      RETURNING *;
       `,
       [review_id, username, body]
     )

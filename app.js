@@ -32,6 +32,8 @@ app.use((err, req, res, next) => {
     err.constraint === "comments_author_fkey"
   ) {
     res.status(404).send({ msg: "user not found" });
+  } else if (err.code === "23503") {
+    res.status(404).send({ msg: "not found" });
   } else {
     console.log(err);
     res.status(500).send({ msg: "internal server error" });

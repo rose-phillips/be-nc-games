@@ -128,7 +128,6 @@ describe("\nPOST /api/reviews/:review_id/comments\n", () => {
   test("get 201 status and add new review comment to database and return new comment", () => {
     const review_id = 2;
     const newComment = {
-      review_id: review_id,
       username: "dav3rid",
       body: "This is exactly what I was saying to my cat last night.",
     };
@@ -138,21 +137,25 @@ describe("\nPOST /api/reviews/:review_id/comments\n", () => {
       .expect(201)
       .then((response) => {
         expect(response.body).toMatchObject({
-          body: expect.any(String),
+          body: "This is exactly what I was saying to my cat last night.",
         });
       });
   });
   test("get 404 'not found' when review_id not found", () => {
     const review_id = 2000;
+    const newComment = {
+      username: "dav3rid",
+      body: "This is exactly what I was saying to my cat last night.",
+    };
     return request(app)
-      .get(`/api/reviews/${review_id}`)
+      .post(`/api/reviews/${review_id}/comments`)
+      .send(newComment)
       .expect(404)
       .then((response) => expect(response.body.msg).toBe("not found"));
   });
   test("get 400 'invalid input' when body not provided", () => {
     const review_id = 2;
     const newComment = {
-      review_id: review_id,
       username: "dav3rid",
     };
     return request(app)
@@ -164,7 +167,6 @@ describe("\nPOST /api/reviews/:review_id/comments\n", () => {
   test("get 404 'user not found' when username doesn't exist in users", () => {
     const review_id = 2;
     const newComment = {
-      review_id: review_id,
       username: "Justine",
       body: "This is exactly what I was saying to my cat last night.",
     };
@@ -173,5 +175,53 @@ describe("\nPOST /api/reviews/:review_id/comments\n", () => {
       .send(newComment)
       .expect(404)
       .then((response) => expect(response.body.msg).toBe("user not found"));
+  });
+  test("get 400 'invalid input' when username not provided", () => {
+    const review_id = 3;
+    const newComment = {
+      body: "This is exactly what I was saying to my cat last night.",
+    };
+    return request(app)
+      .post(`/api/reviews/${review_id}/comments`)
+      .send(newComment)
+      .expect(400)
+      .then((response) => expect(response.body.msg).toBe("invalid input"));
+  });
+  test("get 201 and no unwanted changes to values when request body has unnecessary keys", () => {
+    const review_id = 2;
+    const newComment = {
+      username: "dav3rid",
+      body: "This is exactly what I was saying to my cat last night.",
+      votes: 4,
+    };
+    return request(app)
+      .post(`/api/reviews/${review_id}/comments`)
+      .send(newComment)
+      .expect(201)
+      .then((response) => expect(response.body.votes).toBe(0));
+  });
+  test("get 400 status and 'invalid input' when mispelled username property", () => {
+    const review_id = 3;
+    const newComment = {
+      uzername: "dav3rid",
+      body: "based take bro",
+    };
+    return request(app)
+      .post(`/api/reviews/${review_id}/comments`)
+      .send(newComment)
+      .expect(400)
+      .then((response) => expect(response.body.msg).toBe("invalid input"));
+  });
+  test("get 400 status and 'invalid input' when mispelled body property", () => {
+    const review_id = 3;
+    const newComment = {
+      username: "dav3rid",
+      boody: "based take bro",
+    };
+    return request(app)
+      .post(`/api/reviews/${review_id}/comments`)
+      .send(newComment)
+      .expect(400)
+      .then((response) => expect(response.body.msg).toBe("invalid input"));
   });
 });
