@@ -10,7 +10,11 @@ const app = express();
 app.get("/api/categories", getCategories);
 app.get("/api/reviews", getReviewsCommentCount);
 app.get("/api/reviews/:review_id", getReviewsWithReviewId);
+
+
 app.get("/api/reviews/:review_id/comments", getReviewComments);
+
+
 
 // error handling
 app.all("/*", (req, res) => {
