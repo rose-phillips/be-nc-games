@@ -1,3 +1,4 @@
+const { enable } = require("../app.js");
 const db = require("../db/connection.js");
 
 exports.selectCategories = () => {
@@ -99,5 +100,17 @@ exports.updateVotes = (review_id, { inc_votes }) => {
       }
 
       return updatedReview.rows[0];
+    });
+};
+
+exports.selectUsers = () => {
+  return db
+    .query(
+      `
+      SELECT * FROM users;
+    `
+    )
+    .then((result) => {
+      return result.rows;
     });
 };

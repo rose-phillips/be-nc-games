@@ -226,7 +226,7 @@ describe("\nPOST /api/reviews/:review_id/comments\n", () => {
   });
 });
 describe(`\nPATCH /api/reviews/:review_id\n`, () => {
-  test("get 201 status, add votes to the review and return the ammended review - positive number", () => {
+  test("get 201 status, add votes, return the ammended review - positive number", () => {
     const review_id = 3;
     const newVotes = { inc_votes: 1 };
     return request(app)
@@ -247,7 +247,7 @@ describe(`\nPATCH /api/reviews/:review_id\n`, () => {
         });
       });
   });
-  test("get 201 status, subtract votes to the review and return the ammended review - negative number", () => {
+  test("get 201 status, subtract votes, return the ammended review - negative number", () => {
     const review_id = 3;
     const newVotes = { inc_votes: -10 };
     return request(app)
@@ -305,5 +305,23 @@ describe(`\nPATCH /api/reviews/:review_id\n`, () => {
       .send(newVotes)
       .expect(400)
       .then((response) => expect(response.body.msg).toBe("invalid input"));
+  });
+});
+describe(`\nGET /api/users\n`, () => {
+  test("get 200 status and an array of user objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.users).toEqual(expect.any(Array));
+        expect(response.body.users.length).toBe(4);
+        response.body.users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
   });
 });
