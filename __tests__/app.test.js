@@ -234,3 +234,85 @@ describe("\nPOST /api/reviews/:review_id/comments\n", () => {
       .then((response) => expect(response.body.msg).toBe("invalid input"));
   });
 });
+describe(`\nPATCH /api/reviews/:review_id\n`, () => {
+  test("get 201 status, add votes to the review and return the ammended review - positive number", () => {
+    const review_id = 3;
+    const newVotes = { inc_votes: 1 };
+    return request(app)
+      .patch(`/api/reviews/${review_id}`)
+      .send(newVotes)
+      .expect(201)
+      .then((response) => {
+        expect(response.body).toMatchObject({
+          owner: expect.any(String),
+          title: expect.any(String),
+          review_id: 3,
+          category: expect.any(String),
+          review_img_url: expect.any(String),
+          created_at: expect.any(String),
+          // 5 before patch. adding 1.
+          votes: 6,
+          designer: expect.any(String),
+        });
+      });
+  });
+  test("get 201 status, subtract votes to the review and return the ammended review - negative number", () => {
+    const review_id = 3;
+    const newVotes = { inc_votes: -10 };
+    return request(app)
+      .patch(`/api/reviews/${review_id}`)
+      .send(newVotes)
+      .expect(201)
+      .then((response) => {
+        expect(response.body).toMatchObject({
+          owner: expect.any(String),
+          title: expect.any(String),
+          review_id: 3,
+          category: expect.any(String),
+          review_img_url: expect.any(String),
+          created_at: expect.any(String),
+          // 5 before patch. adding -10.
+          votes: -5,
+          designer: expect.any(String),
+        });
+      });
+  });
+  test(`get 201 and no unwanted changes to values when request body has unnecessary keys`, () => {
+    const review_id = 3;
+    const newVotes = { inc_votes: 1, category: "mainmin' and murderin'!" };
+    return request(app)
+      .patch(`/api/reviews/${review_id}`)
+      .send(newVotes)
+      .expect(201)
+      .then((response) => {
+        expect(response.body).toMatchObject({
+          owner: expect.any(String),
+          title: expect.any(String),
+          review_id: 3,
+          category: "social deduction",
+          review_img_url: expect.any(String),
+          created_at: expect.any(String),
+          votes: 6,
+          designer: expect.any(String),
+        });
+      });
+  });
+  test(`get 404 'not found' when review_id not found`, () => {
+    const review_id = 2000;
+    const newVotes = { inc_votes: 1 };
+    return request(app)
+      .patch(`/api/reviews/${review_id}`)
+      .send(newVotes)
+      .expect(404)
+      .then((response) => expect(response.body.msg).toBe("not found"));
+  });
+  test("get 400 'invalid input' when mispelled inc_votes property", () => {
+    const review_id = 3;
+    const newVotes = { incvotes: 1 };
+    return request(app)
+      .patch(`/api/reviews/${review_id}`)
+      .send(newVotes)
+      .expect(400)
+      .then((response) => expect(response.body.msg).toBe("invalid input"));
+  });
+});

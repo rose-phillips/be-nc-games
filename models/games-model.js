@@ -82,3 +82,24 @@ exports.insertComment = (review_id, { username, body }) => {
       return newComment.rows[0];
     });
 };
+
+exports.updateVotes = (review_id, { inc_votes }) => {
+  return db
+    .query(
+      `
+  UPDATE reviews
+  SET 
+  votes = votes + $2
+  WHERE review_id = $1
+  RETURNING *;
+  `,
+      [review_id, inc_votes]
+    )
+    .then((updatedReview) => {
+      if (!updatedReview.rows[0]) {
+        return Promise.reject({ status: 404, msg: "not found" });
+      }
+
+      return updatedReview.rows[0];
+    });
+};
