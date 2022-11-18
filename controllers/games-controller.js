@@ -6,6 +6,7 @@ const {
   selectReviewComments,
   insertComment,
   updateVotes,
+  selectUsers,
 } = require("../models/games-model");
 
 exports.getCategories = (req, res, next) => {
@@ -52,4 +53,10 @@ exports.patchReviewVotes = (req, res, next) => {
       res.status(201).send(review);
     })
     .catch((err) => next(err));
+};
+
+exports.getUsers = (req, res, next) => {
+  selectUsers().then((users) => {
+    res.status(200).send({ users });
+  });
 };

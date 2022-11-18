@@ -6,6 +6,7 @@ const {
   getReviewComments,
   postComment,
   patchReviewVotes,
+  getUsers,
 } = require("./controllers/games-controller");
 const app = express();
 app.use(express.json());
@@ -16,7 +17,7 @@ app.get("/api/reviews/:review_id", getReviewsWithReviewId);
 app.get("/api/reviews/:review_id/comments", getReviewComments);
 app.post("/api/reviews/:review_id/comments", postComment);
 app.patch("/api/reviews/:review_id", patchReviewVotes);
-
+app.get("/api/users", getUsers);
 
 // error handling
 app.all("/*", (req, res) => {
