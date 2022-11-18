@@ -275,9 +275,18 @@ describe(`\nPATCH /api/reviews/:review_id\n`, () => {
       .patch(`/api/reviews/${review_id}`)
       .send(newVotes)
       .expect(201)
-      .then((response) =>
-        expect(response.body.category).toBe("social deduction")
-      );
+      .then((response) => {
+        expect(response.body).toMatchObject({
+          owner: expect.any(String),
+          title: expect.any(String),
+          review_id: 3,
+          category: "social deduction",
+          review_img_url: expect.any(String),
+          created_at: expect.any(String),
+          votes: 6,
+          designer: expect.any(String),
+        });
+      });
   });
   test(`get 404 'not found' when review_id not found`, () => {
     const review_id = 2000;
