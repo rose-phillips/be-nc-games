@@ -71,6 +71,26 @@ describe("\nGET /api/reviews tests:\n", () => {
         });
       });
   });
+  test("can filter by category", () => {
+    return request(app)
+      .get("/api/reviews?category=dexterity")
+      .expect(200)
+      .then((response) => {
+        response.body.reviews.forEach((review) => {
+          expect(review.category).toBe("dexterity");
+        });
+      });
+  });
+  test("can sort by any valid column", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=review_id")
+      .expect(200)
+      .then((response) => {
+        expect(
+          response.body.reviews.toBeSortedBy("review_id", { ascending: true })
+        );
+      });
+  });
 });
 describe("\nGET /api/reviews/:review_id\n", () => {
   test("get 200 status and matching review", () => {

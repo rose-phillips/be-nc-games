@@ -13,22 +13,33 @@ exports.selectCategories = () => {
     });
 };
 
-exports.selectReviewsCommentCount = () => {
-  return db
-    .query(
-      `
-      SELECT reviews.*, 
-      COUNT(comments.comment_id)::INT AS comment_count 
-      FROM reviews 
-      LEFT JOIN comments ON comments.review_id = reviews.review_id 
-      GROUP BY reviews.review_id 
-      ORDER BY created_at DESC;
+exports.selectReviewsCommentCount = (query) => {
+  console.log(query, "in the model");
+  const queryValues = [];
+  let queryString = `SELECT reviews.*, 
+  COUNT(comments.comment_id)::INT AS comment_count 
+  FROM reviews 
+  LEFT JOIN comments ON comments.review_id = reviews.review_id `;
 
-    `
-    )
-    .then((result) => {
-      return result.rows;
-    });
+  if (query.category) {
+    console.log(query.category, "line 25");
+    queryValues.push(query.category);
+    queryString += "WHERE category = $1 ";
+  }
+
+  queryString += `GROUP BY reviews.review_id `;
+
+  if (query.sort_by) {
+    queryValues.push(query.sort_by);
+    queryString += "ORDER BY $1 ASC";
+  } else {
+    queryString += "ORDER BY created_at DESC";
+  }
+
+  return db.query(queryString, queryValues).then((result) => {
+    console.log(result.rows);
+    return result.rows;
+  });
 };
 
 exports.selectReviewsWithReviewId = (review_id) => {
