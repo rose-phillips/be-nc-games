@@ -9,9 +9,11 @@ const {
   getUsers,
 } = require("./controllers/games-controller");
 
-const cors = require("cors");
-app.use(cors());
 const app = express();
+
+const cors = require("cors");
+
+app.use(cors());
 
 app.use(express.json());
 
