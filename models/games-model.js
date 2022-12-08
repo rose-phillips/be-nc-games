@@ -13,33 +13,36 @@ exports.selectCategories = () => {
     });
 };
 
-exports.selectReviewsCommentCount = (query) => {
-  console.log(query, "in the model");
+exports.selectReviewsCommentCount = (
+  sort_by = "created_at",
+  category,
+  order_by = "DESC"
+) => {
+  console.log(sort_by, category, "in the model");
   const queryValues = [];
   let queryString = `SELECT reviews.*, 
   COUNT(comments.comment_id)::INT AS comment_count 
   FROM reviews 
   LEFT JOIN comments ON comments.review_id = reviews.review_id `;
 
-  if (query.category) {
-    console.log(query.category, "line 25");
-    queryValues.push(query.category);
-    queryString += "WHERE category = $1 ";
-  }
-
-  queryString += `GROUP BY reviews.review_id `;
-
-  if (query.sort_by) {
-    queryValues.push(query.sort_by);
-    queryString += "ORDER BY $1 ASC";
+  if (category) {
+    queryValues.push(category);
+    queryString += `WHERE category = $1 GROUP BY reviews.review_id ORDER BY ${sort_by} ${order_by}`;
+    return db.query(queryString, queryValues).then((result) => {
+      return result.rows;
+    });
   } else {
-    queryString += "ORDER BY created_at DESC";
+    return db
+      .query(
+        `SELECT reviews.*, 
+    COUNT(comments.comment_id)::INT AS comment_count 
+    FROM reviews 
+    LEFT JOIN comments ON comments.review_id = reviews.review_id GROUP BY reviews.review_id ORDER BY ${sort_by}  ${order_by}`
+      )
+      .then((result) => {
+        return result.rows;
+      });
   }
-
-  return db.query(queryString, queryValues).then((result) => {
-    console.log(result.rows);
-    return result.rows;
-  });
 };
 
 exports.selectReviewsWithReviewId = (review_id) => {
@@ -58,10 +61,8 @@ exports.selectReviewsWithReviewId = (review_id) => {
     .then((reviews) => {
       if (!reviews.rows[0]) {
         return Promise.reject({ status: 404, msg: "not found" });
-
       } else {
         return reviews.rows[0];
-
       }
     });
 };

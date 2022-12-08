@@ -16,9 +16,9 @@ exports.getCategories = (req, res, next) => {
 };
 
 exports.getReviewsCommentCount = (req, res, next) => {
-  const query = req.query;
-  console.log(req.query, "controller");
-  selectReviewsCommentCount(query).then((reviews) => {
+  const { sort_by, category, order_by } = req.query;
+
+  selectReviewsCommentCount(sort_by, category, order_by).then((reviews) => {
     res.status(200).send({ reviews });
   });
 };

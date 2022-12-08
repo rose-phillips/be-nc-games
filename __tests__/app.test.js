@@ -86,9 +86,10 @@ describe("\nGET /api/reviews tests:\n", () => {
       .get("/api/reviews?sort_by=review_id")
       .expect(200)
       .then((response) => {
-        expect(
-          response.body.reviews.toBeSortedBy("review_id", { ascending: true })
-        );
+        console.log(response.body.reviews);
+        expect(response.body.reviews).toBeSortedBy("review_id", {
+          descending: true,
+        });
       });
   });
 });
@@ -114,20 +115,13 @@ describe("\nGET /api/reviews/:review_id\n", () => {
         });
       });
   });
-  
-  
 
   test("get 404 'not found' when review_id not found", () => {
-
-
     const review_id = 1000;
     return request(app)
       .get(`/api/reviews/${review_id}`)
       .expect(404)
       .then((response) => expect(response.body.msg).toBe("not found"));
-      
-      
-
   });
 });
 describe("\nGET /api/reviews/:review_id/comments\n", () => {
@@ -151,7 +145,6 @@ describe("\nGET /api/reviews/:review_id/comments\n", () => {
           expect(response.body.comments.length).toBe(3);
         });
       });
-
   });
 });
 describe("\nPOST /api/reviews/:review_id/comments\n", () => {
