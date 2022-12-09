@@ -86,7 +86,6 @@ describe("\nGET /api/reviews tests:\n", () => {
       .get("/api/reviews?sort_by=review_id")
       .expect(200)
       .then((response) => {
-        console.log(response.body.reviews);
         expect(response.body.reviews).toBeSortedBy("review_id", {
           descending: true,
         });
@@ -345,6 +344,21 @@ describe(`\nGET /api/users\n`, () => {
             avatar_url: expect.any(String),
           });
         });
+      });
+  });
+});
+
+describe(`\DELETE /api/comments/:comment_id\n`, () => {
+  test.only("get 204 status and no content", () => {
+    const comment_id = 1;
+    return request(app)
+      .delete(`/api/comments/${comment_id}`)
+      .expect(204)
+      .then(() => {
+        return request(app).get(`/api/reviews/2/comments`);
+      })
+      .then((response) => {
+        expect(response.body.comments.length).toBe(2);
       });
   });
 });

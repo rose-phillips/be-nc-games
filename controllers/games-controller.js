@@ -7,6 +7,7 @@ const {
   insertComment,
   updateVotes,
   selectUsers,
+  removeComment,
 } = require("../models/games-model");
 
 exports.getCategories = (req, res, next) => {
@@ -29,7 +30,6 @@ exports.getReviewsWithReviewId = (req, res, next) => {
       res.status(200).send({ review });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };
@@ -61,4 +61,12 @@ exports.getUsers = (req, res, next) => {
   selectUsers().then((users) => {
     res.status(200).send({ users });
   });
+};
+
+exports.deleteComment = (req, res, next) => {
+  removeComment(req.params.comment_id)
+    .then((comment) => {
+      res.sendStatus(204);
+    })
+    .catch((err) => next(err));
 };

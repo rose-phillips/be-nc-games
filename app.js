@@ -7,6 +7,7 @@ const {
   postComment,
   patchReviewVotes,
   getUsers,
+  deleteComment,
 } = require("./controllers/games-controller");
 
 const app = express();
@@ -24,6 +25,7 @@ app.get("/api/reviews/:review_id/comments", getReviewComments);
 app.post("/api/reviews/:review_id/comments", postComment);
 app.patch("/api/reviews/:review_id", patchReviewVotes);
 app.get("/api/users", getUsers);
+app.delete("/api/comments/:comment_id", deleteComment);
 
 // error handling
 app.all("/*", (req, res) => {
@@ -44,7 +46,6 @@ app.use((err, req, res, next) => {
   } else if (err.code === "23503") {
     res.status(404).send({ msg: "not found" });
   } else {
-    console.log(err);
     res.status(500).send({ msg: "internal server error" });
   }
 });

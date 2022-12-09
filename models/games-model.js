@@ -18,7 +18,6 @@ exports.selectReviewsCommentCount = (
   category,
   order_by = "DESC"
 ) => {
-  console.log(sort_by, category, "in the model");
   const queryValues = [];
   let queryString = `SELECT reviews.*, 
   COUNT(comments.comment_id)::INT AS comment_count 
@@ -133,4 +132,12 @@ exports.selectUsers = () => {
     .then((result) => {
       return result.rows;
     });
+};
+
+exports.removeComment = (comment_id) => {
+  return db.query(
+    `DELETE FROM comments 
+    WHERE comment_id = $1;`,
+    [comment_id]
+  );
 };
